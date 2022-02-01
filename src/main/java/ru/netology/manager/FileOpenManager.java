@@ -1,34 +1,87 @@
 package ru.netology.manager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
 
 public class FileOpenManager {
 
-    private HashMap<String, String> manager = new HashMap<>();
+    private Map<String, String> manager = new LinkedHashMap<String,String>();
+
+    //Добавление связки расширение-приложение
 
     public void add(String key, String value) {
-        manager.put(key, value);
+        String result = key.toLowerCase();
+        manager.put(result, value);
+    }
+
+    //Получать название приложения, предназначенного для открытия файла с определённым расширением
+
+    public String getValueByKey(String key) {
+        String result = key.toLowerCase();
+        return manager.get(result);
+    }
+
+    //Удаление связки по ключу
+
+    public void removeByKey(String key) {
+        String result = key.toLowerCase();
+        manager.remove(result);
+    }
+
+    //Получение словаря
+
+    public Set<Map.Entry<String, String>> getAll() {
+        return manager.entrySet();
+    }
+
+    //Получить список всех зарегистрированных расширений
+    public Set<String> getAllKey() {
+        Set<String> keys = manager.keySet();
+        return keys;
+    }
+
+    //Получить список всех приложений, которые привязаны к каким-либо расширениям(сортировка)
+    public ArrayList<String> getAllValue() {
+        ArrayList<String> values = new ArrayList<>(manager.values());
+        Collections.sort(values);
+        return values;
     }
 
     public boolean containsKey(String key) {
-        return manager.containsKey(key);
+        String result = key.toLowerCase();
+        return manager.containsKey(result);
     }
 
     public boolean containsValue(String value) {
         return manager.containsValue(value);
     }
 
-    public Set<String> getAllKey() {
-        Set<String> keys = manager.keySet();
-        return keys;
+    public void clearAll() {
+        manager.clear();
     }
 
-    public ArrayList<String> getAllValue() {
-        ArrayList<String> values = new ArrayList<>(manager.values());
-        return values;
+    public int getSize() {
+        return manager.size();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FileOpenManager that = (FileOpenManager) o;
+        return Objects.equals(manager, that.manager);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(manager);
+    }
+
+    @Override
+    public String toString() {
+        return "FileOpenManager{" +
+                "manager=" + manager +
+                '}';
     }
 }
 
