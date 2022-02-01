@@ -5,44 +5,42 @@ import java.util.*;
 
 public class FileOpenManager {
 
-    private Map<String, String> manager = new LinkedHashMap<String,String>();
+    private Map<String, String> manager = new LinkedHashMap<>();
 
     //Добавление связки расширение-приложение
-
     public void add(String key, String value) {
         String result = key.toLowerCase();
         manager.put(result, value);
     }
 
     //Получать название приложения, предназначенного для открытия файла с определённым расширением
-
     public String getValueByKey(String key) {
         String result = key.toLowerCase();
         return manager.get(result);
     }
 
     //Удаление связки по ключу
-
     public void removeByKey(String key) {
         String result = key.toLowerCase();
         manager.remove(result);
     }
 
     //Получение словаря
-
     public Set<Map.Entry<String, String>> getAll() {
         return manager.entrySet();
     }
 
-    //Получить список всех зарегистрированных расширений
-    public Set<String> getAllKey() {
-        Set<String> keys = manager.keySet();
-        return keys;
+    //Получить список всех зарегистрированных расширений(сортировка)
+    public List getAllKey() {
+        Set keys = manager.keySet();
+        List sortedList = new ArrayList(keys);
+        Collections.sort(sortedList);
+        return sortedList;
     }
 
     //Получить список всех приложений, которые привязаны к каким-либо расширениям(сортировка)
-    public ArrayList<String> getAllValue() {
-        ArrayList<String> values = new ArrayList<>(manager.values());
+    public List<String> getAllValue() {
+        List<String> values = new ArrayList<>(manager.values());
         Collections.sort(values);
         return values;
     }

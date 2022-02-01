@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FileOpenManagerTest {
     private FileOpenManager manager = new FileOpenManager();
-    private LinkedHashMap<String, String> expected = new LinkedHashMap<>();
+    private Map<String, String> expect = new LinkedHashMap<>();
 
     @BeforeEach
     void initEach() {
@@ -19,7 +19,6 @@ class FileOpenManagerTest {
         manager.add(".bmp", "Paint");
         manager.add(".docx", "MS Word");
         manager.add(".txt", "Notepad++");
-
     }
 
     @Test
@@ -32,24 +31,8 @@ class FileOpenManagerTest {
     }
 
     @Test
-    void shouldAddIf() {
-        manager.add(".JPG", "ACDSee");
-
-
-        expected.put(".jpg", "ACDSee");
-        expected.put(".bmp", "Paint");
-        expected.put(".docx", "MS Word");
-        expected.put(".txt", "Notepad++");
-
-        Set<Map.Entry<String, String>> actual = manager.getAll();
-
-        assertEquals(expected, actual);
-
-    }
-
-    @Test
-    void shouldContainsKeyIfExist() {
-        assertTrue(manager.containsKey(".JPG"));
+    void shouldContainsKeyIfExistWithUpperCase() {
+        assertTrue(manager.containsKey(".TXT"));
     }
 
     @Test
@@ -58,32 +41,63 @@ class FileOpenManagerTest {
     }
 
     @Test
-    void shouldGetAllKey() {
-        Set actual = manager.getAllKey();
+    void shouldGetAllKeyWithSort() {
+        List expected = new ArrayList(List.of(".bmp", ".docx", ".html", ".jpg", ".txt"));
+        List actual = manager.getAllKey();
+
+        assertEquals(expected, actual);
     }
 
     @Test
-    void shouldGetAllValues() {
+    void shouldGetAllValuesWithSort() {
+        List expected = new ArrayList(List.of("ACDSee", "Chrome", "MS Word", "Notepad++", "Paint"));
+        List actual = manager.getAllValue();
 
-       ArrayList actual = manager.getAllValue();
-
+        assertEquals(expected, actual);
     }
 
     @Test
-    void shouldRemoveByKey() {
-        manager.removeByKey(".jpg");
-        Set<Map.Entry<String, String>> result = manager.getAll();
+    void shouldRemoveByKeyIfExistWithUpperCase() {
+        manager.removeByKey(".JPG");
+
+        expect.put(".html", "Chrome");
+        expect.put(".bmp", "Paint");
+        expect.put(".docx", "MS Word");
+        expect.put(".txt", "Notepad++");
+
+        Set<Map.Entry<String, String>> expected = expect.entrySet();
+        Set<Map.Entry<String, String>> actual = manager.getAll();
+
+        assertEquals(expected, actual);
     }
 
     @Test
-    void shouldGetAllMap() {
-        Set<Map.Entry<String, String>> result = manager.getAll();
+    void shouldRemoveByKeyIfNotExist() {
+        manager.removeByKey(".gif");
+
+        expect.put(".html", "Chrome");
+        expect.put(".jpg", "ACDSee");
+        expect.put(".bmp", "Paint");
+        expect.put(".docx", "MS Word");
+        expect.put(".txt", "Notepad++");
+
+        Set<Map.Entry<String, String>> expected = expect.entrySet();
+        Set<Map.Entry<String, String>> actual = manager.getAll();
+
+        assertEquals(expected, actual);
     }
 
     @Test
-    void shouldGetValueByKey() {
-        String result = manager.getValueByKey(".jpg");
+    void shouldGetValueByKeyIfExistWithUpperCase() {
+        String actual = manager.getValueByKey(".DOCX");
+
+        assertEquals("MS Word", actual);
     }
 
+    @Test
+    void shouldGetValueByKeyIfNotExist() {
+        String actual = manager.getValueByKey(".gif");
 
+        assertEquals(null, actual);
+    }
 }
